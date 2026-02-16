@@ -57,10 +57,21 @@ try {
     $pdo->commit();
 
     /* ==========================
-       ★ 保存完了 → カレンダーへ
+       保存完了 → 入力画面へ戻し、サマリー表示
     ========================== */
     $ym = $_POST['ym'] ?? date('Y-m');
-    header("Location: ../calendar.php?group_id={$groupId}&ym={$ym}");
+    if (!preg_match('/^\d{4}-\d{2}$/', $ym)) {
+        $ym = substr($date, 0, 7);
+    }
+
+    $params = http_build_query([
+        'group_id' => $groupId,
+        'date' => $date,
+        'ym' => $ym,
+        'saved' => 1,
+    ]);
+
+    header('Location: ../input.php?' . $params);
     exit;
 
 } catch (Throwable $e) {

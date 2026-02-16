@@ -572,3 +572,58 @@ a.group-card {
 .month .plus{
   color: yellowgreen;
 }
+/* ==========================
+   Input Summary Card
+========================== */
+.summary-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+}
+
+.summary-card h3 {
+  font-size: 17px;
+  margin-bottom: 4px;
+}
+
+.summary-date {
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.summary-row span {
+  color: var(--text-sub);
+}
+
+.summary-row strong {
+  color: var(--text-main);
+}
+
+.summary-row.split.plus strong {
+  color: #1d4ed8;
+}
+
+.summary-row.split.minus strong {
+  color: #dc2626;
+}
+
+.field-help {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-bottom: 8px;
+}

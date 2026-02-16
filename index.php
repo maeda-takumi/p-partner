@@ -146,27 +146,14 @@ foreach ($contribRows as $r) {
 
 <div class="page-index">
 
-  <div class="month-panel">
-    <div class="month-nav">
-      <a class="month-nav-btn" href="?ym=<?= date('Y-m', strtotime($ym.'-01 -1 month')) ?>" aria-label="前月">←</a>
+  <div class="month-nav">
+    <a class="month-nav-btn" href="?ym=<?= date('Y-m', strtotime($ym.'-01 -1 month')) ?>" aria-label="前月">←</a>
 
-      <div class="month-nav-label" id="monthLabel">
-        <?= date('Y年n月', strtotime($ym . '-01')) ?>
-      </div>
-
-      <a class="month-nav-btn" href="?ym=<?= date('Y-m', strtotime($ym.'-01 +1 month')) ?>" aria-label="翌月">→</a>
+    <div class="month-nav-label" id="monthLabel">
+      <?= date('Y年n月', strtotime($ym . '-01')) ?>
     </div>
 
-    <input
-      type="range"
-      id="monthSlider"
-      class="month-slider"
-      min="<?= $minIndex ?>"
-      max="<?= $maxIndex ?>"
-      value="<?= $curIndex ?>"
-      step="1"
-      aria-label="表示月の選択"
-    >
+    <a class="month-nav-btn" href="?ym=<?= date('Y-m', strtotime($ym.'-01 +1 month')) ?>" aria-label="翌月">→</a>
   </div>
   <div class="group-list">
 
