@@ -79,8 +79,11 @@ $contributorName = (string)($contributorRow['contributor_name'] ?? '');
 /* ==========================
    当日サマリー（保存後表示）
 ========================== */
+$hasSavedBalance = !empty($balanceMap);
+$shouldShowSummary = ($saved === 1) || $hasSavedBalance;
+
 $summary = null;
-if ($saved === 1) {
+if ($shouldShowSummary) {
     $stmt = $pdo->prepare("
       SELECT
         COALESCE(SUM(invest_amount), 0) AS total_invest,
