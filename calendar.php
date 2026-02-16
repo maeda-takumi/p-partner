@@ -54,6 +54,22 @@ $results = [];
 foreach ($stmt as $r) {
   $results[$r['d']] = (int)$r['diff'];
 }
+/* 月間の成績グラフ用（日別差額） */
+$dailyDiffs = [];
+for ($day = 1; $day <= $daysInMonth; $day++) {
+  $date = sprintf('%04d-%02d-%02d', $year, $month, $day);
+  $dailyDiffs[$date] = (int)($results[$date] ?? 0);
+}
+
+$maxAbsDiff = 0;
+foreach ($dailyDiffs as $value) {
+  $abs = abs($value);
+  if ($abs > $maxAbsDiff) {
+    $maxAbsDiff = $abs;
+  }
+}
+
+$monthlyTotal = array_sum($dailyDiffs);
 ?>
 
 <div class="container">
@@ -108,6 +124,35 @@ foreach ($stmt as $r) {
       HTML;
     }
     ?>
+  </div>
+  <div class="card monthly-performance">
+    <div class="monthly-performance-head">
+      <h3>今月の成績</h3>
+      <p class="monthly-total <?= $monthlyTotal >= 0 ? 'plus' : 'minus' ?>">
+        <?= $monthlyTotal >= 0 ? '+' : '' ?><?= number_format($monthlyTotal) ?> 円
+      </p>
+    </div>
+
+    <?php if ($maxAbsDiff === 0): ?>
+      <p class="monthly-performance-empty">この月の収支データはありません。</p>
+    <?php else: ?>
+      <div class="performance-chart" role="img" aria-label="<?= $year ?>年<?= $month ?>月の日別成績グラフ">
+        <?php foreach ($dailyDiffs as $date => $diff): ?>
+          <?php
+          $dayNumber = (int)substr($date, -2);
+          $height = max(4, (int)round((abs($diff) / $maxAbsDiff) * 100));
+          ?>
+          <div class="performance-bar-wrap">
+            <div
+              class="performance-bar <?= $diff >= 0 ? 'plus' : 'minus' ?>"
+              style="height: <?= $height ?>%;"
+              title="<?= $dayNumber ?>日: <?= $diff >= 0 ? '+' : '' ?><?= number_format($diff) ?>円"
+            ></div>
+            <span class="performance-day"><?= $dayNumber ?></span>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    <?php endif; ?>
   </div>
 
 </div>
