@@ -132,15 +132,6 @@ $contribStmt->execute([
 
 $contribRows = $contribStmt->fetchAll(PDO::FETCH_ASSOC);
 
-/* group_id => contrib配列 */
-$contribMap = [];
-foreach ($contribRows as $r) {
-  $gid = (int)$r['group_id'];
-  $contribMap[$gid][] = [
-    'name' => $r['name'],
-    'rate' => (int)$r['cnt'],
-  ];
-}
 
 /* group_id => contrib配列 */
 $contribMap = [];
@@ -155,6 +146,28 @@ foreach ($contribRows as $r) {
 
 <div class="page-index">
 
+  <div class="month-panel">
+    <div class="month-nav">
+      <a class="month-nav-btn" href="?ym=<?= date('Y-m', strtotime($ym.'-01 -1 month')) ?>" aria-label="前月">←</a>
+
+      <div class="month-nav-label" id="monthLabel">
+        <?= date('Y年n月', strtotime($ym . '-01')) ?>
+      </div>
+
+      <a class="month-nav-btn" href="?ym=<?= date('Y-m', strtotime($ym.'-01 +1 month')) ?>" aria-label="翌月">→</a>
+    </div>
+
+    <input
+      type="range"
+      id="monthSlider"
+      class="month-slider"
+      min="<?= $minIndex ?>"
+      max="<?= $maxIndex ?>"
+      value="<?= $curIndex ?>"
+      step="1"
+      aria-label="表示月の選択"
+    >
+  </div>
   <div class="group-list">
 
     <?php foreach ($groups as $g): ?>
@@ -164,15 +177,7 @@ foreach ($contribRows as $r) {
         $monthDiff = (int)$g['month_diff'];
         $totalDiff = (int)$g['total_diff'];
       ?>
-      <div class="month-nav card">
-        <a class="month-nav-btn" href="?ym=<?= date('Y-m', strtotime($ym.'-01 -1 month')) ?>">←</a>
 
-        <div class="month-nav-label">
-          <?= date('Y年n月', strtotime($ym . '-01')) ?>
-        </div>
-
-        <a class="month-nav-btn" href="?ym=<?= date('Y-m', strtotime($ym.'-01 +1 month')) ?>">→</a>
-      </div>
 
       <a href="calendar.php?group_id=<?= $gid ?>&ym=<?= urlencode($ym) ?>"
          class="group-card"
@@ -248,14 +253,21 @@ foreach ($contribRows as $r) {
   const slider = document.getElementById('monthSlider');
   const label  = document.getElementById('monthLabel');
 
+  if (!slider || !label) return;
   function indexToYm(idx){
     const y = Math.floor(idx / 12);
     const m = (idx % 12) + 1;
     return String(y).padStart(4,'0') + '-' + String(m).padStart(2,'0');
   }
 
+  function indexToLabel(idx){
+    const y = Math.floor(idx / 12);
+    const m = (idx % 12) + 1;
+    return `${y}年${m}月`;
+  }
+
   slider.addEventListener('input', () => {
-    label.textContent = indexToYm(parseInt(slider.value, 10));
+    label.textContent = indexToLabel(parseInt(slider.value, 10));
   });
 
   slider.addEventListener('change', () => {
